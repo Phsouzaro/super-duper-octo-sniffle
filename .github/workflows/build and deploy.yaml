@@ -28,6 +28,9 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
+      - name: install gke-cloud-auth-plugin
+        run: gcloud components install gke-gcloud-auth-plugin
+
       - name: build and push the docker image
         run: |
           gcloud auth configure-docker ${{ env.GKE_ZONE }}-docker.pkg.dev --quiet
