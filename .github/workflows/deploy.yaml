@@ -11,7 +11,8 @@ env:
   GKE_CLUSTER: gke-shared-des
   GKE_ZONE: us-central1
   DEPLOYMENT_NAME: hello-world-app
-  IMAGE: super-duper/nginx
+  REPOSITORY: super-duper
+  IMAGE: nginx:${{ github.sha }}
 
 jobs:
   deploy:
@@ -31,5 +32,5 @@ jobs:
       - name: build and push the docker image
         run: |
           gcloud auth configure-docker ${{ env.GKE_ZONE }}-docker.pkg.dev
-          docker build -t ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ github.sha }} .
-          docker push ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ github.sha }}
+          docker build -t ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }} .
+          docker push ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}
