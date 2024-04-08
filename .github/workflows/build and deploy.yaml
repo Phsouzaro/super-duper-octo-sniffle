@@ -40,11 +40,11 @@ jobs:
       - name: deploy to gke
         env:
           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
-          IMAGE: nginx
+          APPNAME: nginx
           IMAGE_NAME: ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}
         run: |
           gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region ${{ env.GKE_ZONE }}
           sed -i "s|GOOGLE_PROJECT|$GOOGLE_PROJECT|g" resources.yaml
-          sed -i "s|IMAGE|$IMAGE|g" resources.yaml
+          sed -i "s|APPNAME|$APPNAME|g" resources.yaml
           sed -i "s|IMAGE_NAME|$IMAGE_NAME|g" resources.yaml
           kubectl apply -f resources.yaml

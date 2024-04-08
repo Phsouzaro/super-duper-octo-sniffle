@@ -6,7 +6,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: IMAGE
+    app: APPNAME
   ports:
     - port: 80
       targetPort: 80
@@ -14,19 +14,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: IMAGE
+  name: APPNAME
   labels:
-    app: IMAGE
+    app: APPNAME
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: IMAGE
+      app: APPNAME
   template:
     metadata:
       labels:
-        app: IMAGE
+        app: APPNAME
     spec:
       containers:
-        - name: IMAGE
+        - name: APPNAME
           image: IMAGE_NAME
