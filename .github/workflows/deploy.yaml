@@ -1,4 +1,4 @@
-name: Deploy Nginx
+name: Build and Deploy to GKE
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GKE_ZONE: us-central1
+  PROJECT_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   GKE_CLUSTER: gke-shared-des
-  DEPLOYMENT_NAME: nginx-deployment
-  IMAGE_NAME: ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
+  GKE_ZONE: us-central1
+  DEPLOYMENT_NAME: hello-world-app
+  IMAGE: super-duper/nginx
 
 jobs:
   deploy:
@@ -24,12 +24,12 @@ jobs:
       - name: install the gcloud cli
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ env.PROJECT_SA_KEY }}
           export_default_credentials: true
 
       - name: build and push the docker image
         run: |
           gcloud auth configure-docker ${{ env.GKE_ZONE }}-docker.pkg.dev
-          docker build -t ${{ env.IMAGE_NAME }} .
-          docker push ${{ env.IMAGE_NAME }}
+          docker build -t ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ github.sha }} .
+          docker push ${{ env.GKE_ZONE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ github.sha }}
